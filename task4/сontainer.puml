@@ -1,0 +1,18 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+System_Boundary(deposit, "Сервис «Депозиты»") {
+  Container(api, "Deposit API", "REST .NET Core", "Получение ставок для внутреннего кол-центра")
+  Container(exporter, "File Exporter", "Background job", "Генерация CSV-файлов по расписанию")
+  ContainerDb(depositDb, "MS SQL", "Хранилище ставок")
+}
+
+System(callCenter, "Система кол-центра")
+System_Ext(partnerSystem, "Партнёрский кол-центр")
+
+Rel(callCenter, api, "GET /rates")
+Rel(exporter, partnerSystem, "Файл CSV (email)")
+Rel(api, depositDb, "Чтение ставок")
+Rel(exporter, depositDb, "Чтение ставок")
+
+@enduml

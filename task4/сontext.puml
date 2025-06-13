@@ -1,0 +1,17 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(agent, "Сотрудник кол-центра")
+Person(partner, "Сотрудник партнёрского кол-центра")
+
+System(depositService, "Сервис «Депозиты»", ".NET Core")
+
+System_Ext(callCenter, "Система кол-центра", "Java + React")
+System_Ext(partnerSystem, "Партнёрская система", "Внешняя, читает CSV")
+
+Rel(agent, callCenter, "Информация о депозитах")
+Rel(partner, callCenter, "Информация о депозитах")
+Rel(callCenter, depositService, "REST API: получение ставок")
+Rel(depositService, partnerSystem, "Передаёт CSV-файл (email/ручной экспорт)")
+
+@enduml

@@ -1,0 +1,23 @@
+@startuml C4_Context
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(client, "Клиент", "Пользуется сайтом и интернет-банком")
+
+System(website, "Сайт банка", "React + PHP")
+System(onlineBank, "Интернет-банк", "ASP.NET MVC 4.5 + MS SQL")
+System(contactCenter, "Кол-центр", "Обработка заявок с сайта")
+System_Ext(contactCenterSystem, "Система кол-центра", "Java + React")
+System(depositService, "Сервис «Депозиты»", "C# + MS SQL")
+System(coreBanking, "АБС", "Oracle + PL/SQL")
+System_Ext(smsGateway, "СМС-шлюз", "Отправка сообщений клиентам")
+
+Rel(client, website, "Подаёт заявку")
+Rel(client, onlineBank, "Подаёт заявку")
+Rel(website, contactCenter, "Передаёт заявку")
+Rel(contactCenter, contactCenterSystem, "Работает с системой")
+Rel(onlineBank, depositService, "Передаёт заявку")
+Rel(website, depositService, "Передаёт заявку")
+Rel(depositService, coreBanking, "Создаёт депозит", "")
+Rel(depositService, smsGateway, "Отправка уведомлений", "HTTPS/XML")
+
+@enduml
