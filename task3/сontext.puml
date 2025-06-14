@@ -2,6 +2,8 @@
 !includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
 Person(client, "Клиент", "Пользуется сайтом и интернет-банком")
+Person(managerCallCenter, "Менеджер кол-центра", "Пользуется кол-центром для обработки заявок")
+Person(manager, "Менеджер", "Пользуется бэкофисом для обработки заявок")
 
 System(website, "Сайт банка", "React + PHP")
 System(onlineBank, "Интернет-банк", "ASP.NET MVC 4.5 + MS SQL")
@@ -9,10 +11,16 @@ System(contactCenter, "Кол-центр", "Обработка заявок с �
 System_Ext(contactCenterSystem, "Система кол-центра", "Java + React")
 System(depositService, "Сервис «Депозиты»", "C# + MS SQL")
 System(coreBanking, "АБС", "Oracle + PL/SQL")
+System(backoffice, "Бэкофис", "Обработка заявок менеджером")
 System_Ext(smsGateway, "СМС-шлюз", "Отправка сообщений клиентам")
+
+Rel(manager, backoffice, "Обработка заявок")
+Rel(depositService, backoffice, "Передает заявку на депозиты")
 
 Rel(client, website, "Подаёт заявку")
 Rel(client, onlineBank, "Подаёт заявку")
+Rel(managerCallCenter, contactCenter, "Обрабатывает заявку")
+Rel(contactCenter, coreBanking, "Обработанная заявка")
 Rel(website, contactCenter, "Передаёт заявку")
 Rel(contactCenter, contactCenterSystem, "Работает с системой")
 Rel(onlineBank, depositService, "Передаёт заявку")

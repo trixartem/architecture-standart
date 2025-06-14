@@ -12,6 +12,16 @@ System_Boundary(depositServiceSys, "Сервис «Депозиты»") {
   Container(stakeStorage, "Хранилище ставок", "MS SQL", "Ставки по депозитам")
 }
 
+System_Boundary(backoffice, "Сервис «Бэкофис»") {
+    Container(backofficeAPI, "REST API", "C#", "Подтверждение заявок")
+    ContainerDb(backofficeDb, "MS SQL", "Хранение заявок")
+}
+
+System_Boundary(callCenter, "Сервис «кол-центр»") {
+Container(callCenterAPI, "REST API", "C#", "Обработка заявок")
+}
+
+
 System(coreBanking, "АБС", "Oracle", "Создание депозита, хранение договоров")
 System_Ext(smsGateway, "СМС-шлюз", "Отправка уведомлений клиенту")
 
@@ -20,5 +30,8 @@ Rel(controller, depositAPI, "REST API вызов")
 Rel(depositAPI, stakeStorage, "Запись / чтение ставок")
 Rel(depositAPI, coreBanking, "Создание депозита")
 Rel(depositAPI, smsGateway, "Отправка уведомлений", "HTTPS/XML")
+
+Rel(callCenterAPI, depositAPI, "Получение данных о депозитах и заявках")
+Rel(backofficeAPI, depositAPI, "Получение данных о депозитах и заявках")
 
 @enduml
