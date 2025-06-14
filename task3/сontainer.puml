@@ -1,0 +1,37 @@
+@startuml C4_Container
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+System_Boundary(onlineBank, "Интернет-банк") {
+  Container(ui, "UI", "ASP.NET MVC", "Форма депозита")
+  Container(controller, "DepositController", "C#", "Валидация и отправка заявки в API")
+  ContainerDb(bankDb, "MS SQL", "Хранение заявок и справочников")
+}
+
+System_Boundary(depositServiceSys, "Сервис «Депозиты»") {
+  Container(depositAPI, "REST API", "C#", "Обработка заявок")
+  Container(stakeStorage, "Хранилище ставок", "MS SQL", "Ставки по депозитам")
+}
+
+System_Boundary(backoffice, "Сервис «Бэкофис»") {
+    Container(backofficeAPI, "REST API", "C#", "Подтверждение заявок")
+    ContainerDb(backofficeDb, "MS SQL", "Хранение заявок")
+}
+
+System_Boundary(callCenter, "Сервис «кол-центр»") {
+Container(callCenterAPI, "REST API", "C#", "Обработка заявок")
+}
+
+
+System(coreBanking, "АБС", "Oracle", "Создание депозита, хранение договоров")
+System_Ext(smsGateway, "СМС-шлюз", "Отправка уведомлений клиенту")
+
+Rel(ui, controller, "Отправка данных")
+Rel(controller, depositAPI, "REST API вызов")
+Rel(depositAPI, stakeStorage, "Запись / чтение ставок")
+Rel(depositAPI, coreBanking, "Создание депозита")
+Rel(depositAPI, smsGateway, "Отправка уведомлений", "HTTPS/XML")
+
+Rel(callCenterAPI, depositAPI, "Получение данных о депозитах и заявках")
+Rel(backofficeAPI, depositAPI, "Получение данных о депозитах и заявках")
+
+@enduml
